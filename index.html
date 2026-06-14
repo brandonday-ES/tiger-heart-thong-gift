@@ -24,6 +24,7 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{min-height:100%}
+  html{scroll-behavior:smooth}
   body{
     background:
       radial-gradient(90% 70% at 50% 0%, rgba(255,31,87,.24), transparent 60%),
@@ -104,12 +105,9 @@
     animation:heart-thump 1.15s ease-in-out infinite;
   }
   @keyframes heart-thump{0%,100%{transform:scale(.96)}35%{transform:scale(1.12)}55%{transform:scale(1)}}
-  .kicker{
-    position:relative;text-align:center;text-transform:uppercase;letter-spacing:.34em;color:var(--gold);
-    font-size:12px;margin-bottom:22px;
-  }
   .poem{
     position:relative;color:#f4bdc7;text-align:center;font-size:clamp(19px,5vw,24px);line-height:1.7;
+    scroll-margin-top:28px;
   }
   .stanza{margin-bottom:1.7em}
   .sig{
@@ -153,8 +151,7 @@
       <img src="tiger-photo.jpeg" alt="Tiger and Teddy Bear kissing in the mountains">
     </div>
     <div class="heart">❤️‍🔥</div>
-    <div class="kicker">opened with fireworks</div>
-    <div class="poem">
+    <div class="poem" id="poem">
       <div class="stanza">
         <p>Tiger, baby, climb on top,</p>
         <p>Make my heart and body stop.</p>
@@ -193,10 +190,10 @@
 
 <script>
 (function(){
-  var door=document.getElementById('door'),gift=document.getElementById('gift'),close=document.getElementById('close');
+  var door=document.getElementById('door'),gift=document.getElementById('gift'),close=document.getElementById('close'),poem=document.getElementById('poem');
   var canvas=document.getElementById('burst'),ctx=canvas.getContext('2d');
   var opened=false,reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var parts=[],glyphs=['❤️','💋','🔥','🐾','🩲','💥','❤️‍🔥'];
+  var parts=[],ticker=false,glyphs=['❤️','💋','🔥','🐾','🩲','💥','❤️‍🔥','💕','💘','✨'];
   function size(){
     canvas.width=innerWidth*devicePixelRatio;
     canvas.height=innerHeight*devicePixelRatio;
@@ -209,8 +206,8 @@
       parts.push({
         x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4,
         rot:Math.random()*6.28,vr:(Math.random()-.5)*.36,
-        life:1,decay:.004+Math.random()*.008,
-        size:g?22+Math.random()*34:3+Math.random()*6,
+        life:1,decay:.0028+Math.random()*.006,
+        size:g?24+Math.random()*40:3+Math.random()*7,
         glyph:g?glyphs[(Math.random()*glyphs.length)|0]:null,
         color:Math.random()<.45?'#ff1f57':(Math.random()<.7?'#f5b15d':'#ffe8ee')
       });
@@ -227,7 +224,18 @@
       else{ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(0,0,p.size,0,Math.PI*2);ctx.fill()}
       ctx.restore();
     }
-    if(parts.length){requestAnimationFrame(tick)}
+    if(parts.length){requestAnimationFrame(tick)}else{ticker=false}
+  }
+  function startTick(){
+    if(!ticker){ticker=true;requestAnimationFrame(tick)}
+  }
+  function finale(){
+    if(reduced)return;
+    burst(innerWidth*.5,innerHeight*.2,190,18);
+    burst(innerWidth*.16,innerHeight*.18,120,13);
+    burst(innerWidth*.84,innerHeight*.18,120,13);
+    burst(innerWidth*.5,innerHeight*.56,130,16);
+    startTick();
   }
   function open(e){
     if(opened)return;opened=true;
@@ -235,16 +243,21 @@
     if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY}
     else if(e&&e.clientX){x=e.clientX;y=e.clientY}
     if(!reduced){
-      burst(x,y,150,17);
-      setTimeout(function(){burst(innerWidth*.5,innerHeight*.35,130,14)},170);
-      setTimeout(function(){burst(innerWidth*.22,innerHeight*.28,95,12)},320);
-      setTimeout(function(){burst(innerWidth*.78,innerHeight*.3,95,12)},440);
-      requestAnimationFrame(tick);
+      burst(x,y,230,21);
+      setTimeout(function(){burst(innerWidth*.5,innerHeight*.35,210,18)},130);
+      setTimeout(function(){burst(innerWidth*.22,innerHeight*.28,150,15)},260);
+      setTimeout(function(){burst(innerWidth*.78,innerHeight*.3,150,15)},360);
+      setTimeout(finale,620);
+      setTimeout(finale,1080);
+      startTick();
     }
     door.classList.add('gone');
     gift.classList.add('shown');
     gift.setAttribute('aria-hidden','false');
     setTimeout(function(){door.style.display='none'},760);
+    setTimeout(function(){
+      poem.scrollIntoView({behavior:reduced?'auto':'smooth',block:'start'});
+    },1450);
   }
   door.addEventListener('click',open);
   door.addEventListener('touchstart',open,{passive:true});
