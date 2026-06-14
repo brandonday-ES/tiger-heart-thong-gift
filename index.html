@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>For Tiger</title>
+<meta name="robots" content="noindex">
+<meta property="og:title" content="For Tiger">
+<meta property="og:description" content="Tap to open your gift.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --char:#090305;
+    --wine:#210711;
+    --rose:#ff5574;
+    --hot:#ff1f57;
+    --gold:#f5b15d;
+    --bone:#ffe8ee;
+    --dim:#8d4d5c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{min-height:100%}
+  body{
+    background:
+      radial-gradient(90% 70% at 50% 0%, rgba(255,31,87,.24), transparent 60%),
+      radial-gradient(60% 50% at 50% 100%, rgba(245,177,93,.13), transparent 55%),
+      linear-gradient(180deg, #130409, var(--char));
+    color:var(--bone);
+    font-family:'EB Garamond', Georgia, serif;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #burst{position:fixed;inset:0;z-index:80;pointer-events:none}
+  .door{
+    position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;
+    padding:28px;cursor:pointer;transition:opacity .7s ease, transform .7s ease;
+  }
+  .door.gone{opacity:0;transform:scale(1.03);pointer-events:none}
+  .giftbox{
+    width:min(86vw,390px);aspect-ratio:1.2;border-radius:18px;position:relative;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;
+    background:linear-gradient(145deg,#1b0710,#3a1022 52%,#18050d);
+    border:1px solid rgba(255,85,116,.35);
+    box-shadow:0 24px 80px rgba(0,0,0,.65),0 0 80px rgba(255,31,87,.22),inset 0 1px 0 rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .giftbox::before,.giftbox::after{content:"";position:absolute;background:linear-gradient(180deg,#ff7890,#b30f39);box-shadow:0 0 30px rgba(255,31,87,.35)}
+  .giftbox::before{width:34px;inset:0 auto 0 50%;transform:translateX(-50%)}
+  .giftbox::after{height:34px;inset:50% 0 auto 0;transform:translateY(-50%)}
+  .lid{
+    position:absolute;left:-10px;right:-10px;top:-20px;height:72px;border-radius:18px 18px 8px 8px;
+    background:linear-gradient(180deg,#4d1529,#230811);
+    border:1px solid rgba(255,85,116,.35);
+    transform-origin:center bottom;
+    animation:lid-rattle 2s ease-in-out infinite;
+    z-index:2;
+  }
+  @keyframes lid-rattle{0%,100%{transform:rotate(0)}45%{transform:rotate(-1.2deg) translateY(-1px)}55%{transform:rotate(1.2deg) translateY(-2px)}}
+  .for{
+    position:relative;z-index:3;font-family:'Playfair Display',serif;font-style:italic;
+    font-size:clamp(46px,13vw,74px);line-height:1;color:#fff0f4;
+    text-shadow:0 0 35px rgba(255,31,87,.58);
+  }
+  .hint{
+    position:relative;z-index:3;text-transform:uppercase;letter-spacing:.28em;font-size:12px;color:#d1798a;
+    animation:breathe 2.4s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{opacity:.48}50%{opacity:1}}
+  main{
+    min-height:100vh;position:relative;z-index:10;opacity:0;visibility:hidden;
+    display:flex;align-items:center;justify-content:center;padding:38px 18px 54px;
+    transition:opacity .9s ease .15s;
+  }
+  main.shown{opacity:1;visibility:visible}
+  .letter{
+    width:min(92vw,560px);position:relative;border-radius:22px;padding:32px 22px 42px;
+    background:linear-gradient(180deg,rgba(32,8,17,.94),rgba(12,4,7,.96));
+    border:1px solid rgba(255,85,116,.28);
+    box-shadow:0 26px 80px rgba(0,0,0,.72),0 0 90px rgba(255,31,87,.18);
+    overflow:hidden;
+  }
+  .letter::before{
+    content:"";position:absolute;inset:-40% -20% auto;aspect-ratio:1;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,31,87,.24),transparent 62%);
+    pointer-events:none;
+  }
+  .heart{
+    position:relative;text-align:center;font-size:clamp(86px,28vw,170px);line-height:1;margin:2px 0 12px;
+    filter:drop-shadow(0 0 34px rgba(255,31,87,.82));
+    animation:heart-thump 1.15s ease-in-out infinite;
+  }
+  @keyframes heart-thump{0%,100%{transform:scale(.96)}35%{transform:scale(1.12)}55%{transform:scale(1)}}
+  .kicker{
+    position:relative;text-align:center;text-transform:uppercase;letter-spacing:.34em;color:var(--gold);
+    font-size:12px;margin-bottom:22px;
+  }
+  .poem{
+    position:relative;color:#f4bdc7;text-align:center;font-size:clamp(19px,5vw,24px);line-height:1.7;
+  }
+  .stanza{margin-bottom:1.7em}
+  .sig{
+    margin-top:2.4em;text-align:center;font-size:clamp(24px,6vw,31px);color:#ff6f88;
+    text-shadow:0 0 28px rgba(255,31,87,.45);letter-spacing:.05em;
+  }
+  .close{
+    display:block;margin:30px auto 0;background:rgba(255,85,116,.08);border:1px solid rgba(255,85,116,.28);
+    color:#d88998;border-radius:999px;padding:10px 24px;font-family:inherit;font-size:14px;
+    letter-spacing:.16em;text-transform:uppercase;cursor:pointer;
+  }
+  .sparkle{
+    position:absolute;inset:0;pointer-events:none;opacity:.85;
+    background-image:
+      radial-gradient(circle at 18% 18%,rgba(255,255,255,.34) 0 1px,transparent 2px),
+      radial-gradient(circle at 80% 24%,rgba(245,177,93,.38) 0 1px,transparent 2px),
+      radial-gradient(circle at 70% 80%,rgba(255,85,116,.4) 0 1px,transparent 2px);
+    background-size:70px 90px,110px 100px,90px 120px;
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition-duration:.2s!important}
+    #burst{display:none}
+  }
+</style>
+</head>
+<body>
+<canvas id="burst"></canvas>
+
+<section class="door" id="door" role="button" aria-label="Open gift for Tiger">
+  <div class="giftbox">
+    <div class="lid"></div>
+    <div class="for">For Tiger</div>
+    <div class="hint">tap to open your gift</div>
+  </div>
+</section>
+
+<main id="gift" aria-hidden="true">
+  <article class="letter">
+    <div class="sparkle"></div>
+    <div class="heart">❤️‍🔥</div>
+    <div class="kicker">opened with fireworks</div>
+    <div class="poem">
+      <div class="stanza">
+        <p>Tiger, baby, climb on top,</p>
+        <p>Make my heart and body stop.</p>
+        <p>Nails on skin and teeth that bite,</p>
+        <p>You're my favorite kind of night.</p>
+      </div>
+      <div class="stanza">
+        <p>Pull me closer, take your time,</p>
+        <p>Your dirty mouth should be a crime.</p>
+        <p>Whisper things that make me shake,</p>
+        <p>Tell me all the rules you'll break.</p>
+      </div>
+      <div class="stanza">
+        <p>Your hips roll slow, then pick up speed,</p>
+        <p>You know exactly what I need.</p>
+        <p>Sweat and sheets all tangled tight,</p>
+        <p>Losing all control tonight.</p>
+      </div>
+      <div class="stanza">
+        <p>You're the spark, the flame, the fire,</p>
+        <p>Every filthy little desire.</p>
+        <p>When you grin, I'm done, I'm through,</p>
+        <p>A helpless mess because of you.</p>
+      </div>
+      <div class="stanza">
+        <p>So come here, girl, don't play nice,</p>
+        <p>You look too damn good to think twice.</p>
+        <p>Lock the door and kill the light,</p>
+        <p>Tiger, wreck me all damn night.</p>
+      </div>
+      <div class="sig">🐾💋<br><em>— Your Teddy Bear</em></div>
+    </div>
+    <button class="close" type="button" id="close">close</button>
+  </article>
+</main>
+
+<script>
+(function(){
+  var door=document.getElementById('door'),gift=document.getElementById('gift'),close=document.getElementById('close');
+  var canvas=document.getElementById('burst'),ctx=canvas.getContext('2d');
+  var opened=false,reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var parts=[],glyphs=['❤️','💋','🔥','🐾','🩲','💥','❤️‍🔥'];
+  function size(){
+    canvas.width=innerWidth*devicePixelRatio;
+    canvas.height=innerHeight*devicePixelRatio;
+    ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  }
+  size();addEventListener('resize',size);
+  function burst(x,y,count,power){
+    for(var i=0;i<count;i++){
+      var a=Math.random()*Math.PI*2,sp=(3+Math.random()*power),g=Math.random()<.62;
+      parts.push({
+        x:x,y:y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-4,
+        rot:Math.random()*6.28,vr:(Math.random()-.5)*.36,
+        life:1,decay:.004+Math.random()*.008,
+        size:g?22+Math.random()*34:3+Math.random()*6,
+        glyph:g?glyphs[(Math.random()*glyphs.length)|0]:null,
+        color:Math.random()<.45?'#ff1f57':(Math.random()<.7?'#f5b15d':'#ffe8ee')
+      });
+    }
+  }
+  function tick(){
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    for(var i=parts.length-1;i>=0;i--){
+      var p=parts[i];
+      p.x+=p.vx;p.y+=p.vy;p.vy+=.13;p.vx*=.991;p.rot+=p.vr;p.life-=p.decay;
+      if(p.life<=0){parts.splice(i,1);continue}
+      ctx.save();ctx.globalAlpha=Math.max(p.life,0);ctx.translate(p.x,p.y);ctx.rotate(p.rot);
+      if(p.glyph){ctx.font=p.size+'px serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(p.glyph,0,0)}
+      else{ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(0,0,p.size,0,Math.PI*2);ctx.fill()}
+      ctx.restore();
+    }
+    if(parts.length){requestAnimationFrame(tick)}
+  }
+  function open(e){
+    if(opened)return;opened=true;
+    var x=innerWidth/2,y=innerHeight/2;
+    if(e&&e.touches&&e.touches[0]){x=e.touches[0].clientX;y=e.touches[0].clientY}
+    else if(e&&e.clientX){x=e.clientX;y=e.clientY}
+    if(!reduced){
+      burst(x,y,150,17);
+      setTimeout(function(){burst(innerWidth*.5,innerHeight*.35,130,14)},170);
+      setTimeout(function(){burst(innerWidth*.22,innerHeight*.28,95,12)},320);
+      setTimeout(function(){burst(innerWidth*.78,innerHeight*.3,95,12)},440);
+      requestAnimationFrame(tick);
+    }
+    door.classList.add('gone');
+    gift.classList.add('shown');
+    gift.setAttribute('aria-hidden','false');
+    setTimeout(function(){door.style.display='none'},760);
+  }
+  door.addEventListener('click',open);
+  door.addEventListener('touchstart',open,{passive:true});
+  close.addEventListener('click',function(){
+    gift.classList.remove('shown');
+    gift.setAttribute('aria-hidden','true');
+    door.style.display='flex';
+    setTimeout(function(){door.classList.remove('gone');opened=false},20);
+  });
+})();
+</script>
+</body>
+</html>
