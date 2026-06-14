@@ -7,6 +7,7 @@
 <meta name="robots" content="noindex">
 <meta property="og:title" content="For Tiger">
 <meta property="og:description" content="Tap to open your gift.">
+<meta property="og:image" content="https://brandonday-es.github.io/tiger-heart-thong-gift/tiger-photo.jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,6 +88,16 @@
     background:radial-gradient(circle,rgba(255,31,87,.24),transparent 62%);
     pointer-events:none;
   }
+  .photo-frame{
+    position:relative;width:100%;border-radius:18px;overflow:hidden;margin:0 0 26px;
+    box-shadow:0 20px 58px rgba(0,0,0,.64),0 0 0 1px rgba(255,85,116,.24);
+  }
+  .photo-frame::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,transparent 58%,rgba(12,4,7,.28));
+    pointer-events:none;
+  }
+  .photo-frame img{display:block;width:100%;height:auto}
   .heart{
     position:relative;text-align:center;font-size:clamp(86px,28vw,170px);line-height:1;margin:2px 0 12px;
     filter:drop-shadow(0 0 34px rgba(255,31,87,.82));
@@ -138,6 +149,9 @@
 <main id="gift" aria-hidden="true">
   <article class="letter">
     <div class="sparkle"></div>
+    <div class="photo-frame">
+      <img src="tiger-photo.jpeg" alt="Tiger and Teddy Bear kissing in the mountains">
+    </div>
     <div class="heart">❤️‍🔥</div>
     <div class="kicker">opened with fireworks</div>
     <div class="poem">
